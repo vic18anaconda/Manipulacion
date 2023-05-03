@@ -1,32 +1,38 @@
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { Column } from 'react-table';
-import { User } from './types';
 import React from 'react';
+import { User } from './types';
 
-interface Props {
+type Props = {
   users: User[];
-}
+  onDelete: (user: User) => void;
+  onEdit: (user: User) => void;
+};
 
-export const UsersTable = ({ users }: Props) => {
-  const navigate = useNavigate();
+const UsersTable = ({ users, onDelete, onEdit} : Props) => {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user) => (
+          <tr key={user.id}>
+            <td>{user.name}</td>
+            <td>{user.age}</td>
+            <td>{user.email}</td>
+            <td>
+              <button onClick={() => onDelete(user)}>Delete</button>
+              <button onClick={() => onEdit(user)}>Edit</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
-  const columns: Column<User>[] = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: 'name' },
-    { Header: 'Email', accessor: 'email' },
-    {
-      Header: '',
-      Cell: ({ row }) => (
-        <Button
-          variant="primary"
-          onClick={() => navigate(`/users/edit/${row.original.id}`)}
-        >
-          Edit
-        </Button>
-      ),
-    },
-  ];
-
-  //...
-}
+export default UsersTable;

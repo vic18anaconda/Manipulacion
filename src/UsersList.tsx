@@ -1,21 +1,26 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
-import { User } from "../types";
-import { users } from "../users";
+import React, { useEffect, useState } from "react";
+
+import { User } from "./types";
+import { getUsers } from "./users";
 
 type Props = {
   users: User[];
+  onEditUser: (user: User) => void; 
 };
 
-const UsersList = ({ users }: Props) => {
-  const history = useHistory();
+const UsersList = ({ users, onEditUser }: Props) => {
+ 
+  const [userList, setUserList ] = useState<User[]>([]);
 
-  const handleEditUser = (user: User) => {
-    history.push({
-      pathname: "/edit-user",
-      state: { user }
-    });
-  };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await getUsers();
+      setUserList(users);
+    };
+    fetchUsers();
+  }, []);
+
+  
 
   return (
     <div>
@@ -34,7 +39,7 @@ const UsersList = ({ users }: Props) => {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>
-                <button onClick={() => handleEditUser(user)}>Edit</button>
+                <button onClick={() => onEditUser(user)}>Edit</button>
               </td>
             </tr>
           ))}
@@ -44,8 +49,5 @@ const UsersList = ({ users }: Props) => {
   );
 };
 
-UsersList.defaultProps = {
-  users
-};
 
 export default UsersList;
