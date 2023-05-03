@@ -1,20 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import UsersList from "./components/UsersList";
 import EditUser from "./components/EditUser";
 import { User } from "./types";
+import { users } from "./users";
 
-const App = () => {
-  const [users, setUsers] = useState<User[]>([
-    { id: 1, name: "John Doe", email: "john.doe@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com" },
-    { id: 3, name: "Bob Johnson", email: "bob.johnson@example.com" },
-  ]);
-
+function App() {
   const handleUpdateUser = (updatedUser: User) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
+    // En este caso, simplemente imprimimos la información del usuario actualizado en la consola
+    console.log(updatedUser);
   };
 
   return (
@@ -23,12 +17,12 @@ const App = () => {
         <Route exact path="/">
           <UsersList users={users} />
         </Route>
-        <Route path="/edit-user">
-          <EditUser users={users} onUpdateUser={handleUpdateUser} />
+        <Route exact path="/edit-user">
+          <EditUser handleUpdateUser={handleUpdateUser} />
         </Route>
       </Switch>
     </Router>
   );
-};
+}
 
 export default App;

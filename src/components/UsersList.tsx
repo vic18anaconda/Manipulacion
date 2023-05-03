@@ -1,27 +1,51 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useHistory } from "react-router-dom"
-import UsersList from "./components/UsersList";
-import EditUser from "./components/EditUser";
+import { useHistory } from "react-router-dom";
+import { User } from "../types";
+import { users } from "../users";
 
-const App = () => {
-  const users = [
-    { id: 1, name: "John Smith", email: "john@example.com" },
-    { id: 2, name: "Jane Doe", email: "jane@example.com" },
-  ];
+type Props = {
+  users: User[];
+};
+
+const UsersList = ({ users }: Props) => {
+  const history = useHistory();
+
+  const handleEditUser = (user: User) => {
+    history.push({
+      pathname: "/edit-user",
+      state: { user }
+    });
+  };
 
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          <UsersList users={users} />
-        </Route>
-        <Route path="/edit-user">
-          <EditUser />
-        </Route>
-      </Switch>
-    </Router>
+    <div>
+      <h2>Users</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user.id}>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>
+                <button onClick={() => handleEditUser(user)}>Edit</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
-export default App;
+UsersList.defaultProps = {
+  users
+};
+
+export default UsersList;
